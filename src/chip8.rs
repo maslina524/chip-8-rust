@@ -253,25 +253,22 @@ impl Chip8 {
     }
 
     fn get_pressed_ch8_key(&self) -> Option<u8> {
+        if is_key_pressed(KeyCode::Key0) { return Some(0x0); }
         if is_key_pressed(KeyCode::Key1) { return Some(0x1); }
         if is_key_pressed(KeyCode::Key2) { return Some(0x2); }
         if is_key_pressed(KeyCode::Key3) { return Some(0x3); }
-        if is_key_pressed(KeyCode::Key4) { return Some(0xC); }
-        
-        if is_key_pressed(KeyCode::Q) { return Some(0x4); }
-        if is_key_pressed(KeyCode::W) { return Some(0x5); }
-        if is_key_pressed(KeyCode::E) { return Some(0x6); }
-        if is_key_pressed(KeyCode::R) { return Some(0xD); }
-        
-        if is_key_pressed(KeyCode::A) { return Some(0x7); }
-        if is_key_pressed(KeyCode::S) { return Some(0x8); }
-        if is_key_pressed(KeyCode::D) { return Some(0x9); }
-        if is_key_pressed(KeyCode::F) { return Some(0xE); }
-        
-        if is_key_pressed(KeyCode::Z) { return Some(0xA); }
-        if is_key_pressed(KeyCode::X) { return Some(0x0); }
-        if is_key_pressed(KeyCode::C) { return Some(0xB); }
-        if is_key_pressed(KeyCode::V) { return Some(0xF); }
+        if is_key_pressed(KeyCode::Key4) { return Some(0x4); }
+        if is_key_pressed(KeyCode::Key5) { return Some(0x5); }
+        if is_key_pressed(KeyCode::Key6) { return Some(0x6); }
+        if is_key_pressed(KeyCode::Key7) { return Some(0x7); }
+        if is_key_pressed(KeyCode::Key8) { return Some(0x8); }
+        if is_key_pressed(KeyCode::Key9) { return Some(0x9); }
+        if is_key_pressed(KeyCode::A) { return Some(0xA); }
+        if is_key_pressed(KeyCode::B) { return Some(0xB); }
+        if is_key_pressed(KeyCode::C) { return Some(0xC); }
+        if is_key_pressed(KeyCode::D) { return Some(0xD); }
+        if is_key_pressed(KeyCode::E) { return Some(0xE); }
+        if is_key_pressed(KeyCode::F) { return Some(0xF); }
         
         None
     }
