@@ -2,8 +2,10 @@ use std::{env, fs};
 
 mod chip8;
 use chip8::Chip8;
+use macroquad::prelude::*;
 
-fn main() {
+#[macroquad::main("chip8")]
+async fn main() {
     let argv: Vec<String> = env::args().collect();
     let ch8_file = argv.get(1);
     let show_regs = argv.contains(&"--show-regs".to_string());
@@ -28,6 +30,7 @@ fn main() {
                 if show_regs {
                     chip8.print_regs();
                 }
+                next_frame().await;
             }
         },
         Err(e) => eprintln!("Failed to read file: {e}")

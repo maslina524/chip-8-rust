@@ -1,5 +1,6 @@
 use std::io::{self, Write};
 use fastrand;
+use macroquad::prelude::*;
 
 pub enum Ch8Errs {
     UnknownOpcode(u16)
@@ -35,6 +36,8 @@ impl Chip8 {
             waiting_for_key: None
         };
         chip8.load_font();
+        request_new_screen_size(1024.0, 512.0);
+
         chip8
     }
     
@@ -199,15 +202,30 @@ impl Chip8 {
 
     pub fn is_waiting_key(&self) {
         if let Some(reg) = self.waiting_for_key {
-           if let Some(key) = get_pressed_key() {
-                self.v[reg as usize] = key;
-                self.waiting_for_key = None;
-                self.pc += 2;
-            }
+            // if let Some(key) = get_pressed_key() {
+            //     self.v[reg as usize] = key;
+            //     self.waiting_for_key = None;
+            //     self.pc += 2;
+            // }
         }
     }
 
-    pub fn update_keypad_state(&self) {
-
+    pub fn update_keypad_state(&mut self) {
+        self.keypad[0x0] = is_key_down(KeyCode::Key0);
+        self.keypad[0x1] = is_key_down(KeyCode::Key1);
+        self.keypad[0x2] = is_key_down(KeyCode::Key2);
+        self.keypad[0x3] = is_key_down(KeyCode::Key3);
+        self.keypad[0x4] = is_key_down(KeyCode::Key4);
+        self.keypad[0x5] = is_key_down(KeyCode::Key5);
+        self.keypad[0x6] = is_key_down(KeyCode::Key6);
+        self.keypad[0x7] = is_key_down(KeyCode::Key7);
+        self.keypad[0x8] = is_key_down(KeyCode::Key8);
+        self.keypad[0x9] = is_key_down(KeyCode::Key9);
+        self.keypad[0xA] = is_key_down(KeyCode::A);
+        self.keypad[0xB] = is_key_down(KeyCode::B);
+        self.keypad[0xC] = is_key_down(KeyCode::C);
+        self.keypad[0xD] = is_key_down(KeyCode::D);
+        self.keypad[0xE] = is_key_down(KeyCode::E);
+        self.keypad[0xF] = is_key_down(KeyCode::F);
     }
 }
