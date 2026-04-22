@@ -178,7 +178,9 @@ impl Chip8 {
                     self.pc += 2
                 }
             },
-            0xA => {},
+            0xA => {
+                self.i = nnn
+            },
             0xB => {
                 self.pc = nnn + self.v[0x0] as u16;
             },
