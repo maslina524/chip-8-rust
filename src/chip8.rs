@@ -186,7 +186,21 @@ impl Chip8 {
                 self.v[x] = fastrand::u8(0..255)
             },
             0xD => {},
-            0xE => {},
+            0xE => {
+                match nn {
+                    0x9E => {
+                        if self.keypad[self.v[x] as usize] {
+                            self.pc += 2
+                        }
+                    }
+                    0xA1 => {
+                        if !self.keypad[self.v[x] as usize] {
+                            self.pc += 2
+                        }
+                    }
+                    _ => return Err(Ch8Errs::UnknownOpcode(opcode))
+                }
+            },
             0xF => {
                 match nn {
                     0x07 => self.v[x] = self.delay_timer,
