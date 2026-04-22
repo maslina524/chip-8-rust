@@ -204,6 +204,32 @@ impl Chip8 {
             0xF => {
                 match nn {
                     0x07 => self.v[x] = self.delay_timer,
+                    0x0A => {
+                        self.waiting_for_key = Some(x as u8);
+                        self.pc -= 2;
+                    },
+                    0x15 => self.delay_timer = self.v[x],
+                    0x18 => self.sound_timer = self.v[x],
+                    0x1E => self.i = self.i + self.v[x] as u16,
+                    0x29 => self.i = self.v[x] as u16 * 5,
+                    0x33 => {
+                            let val = self.v[x];
+                            self.memory[self.i as usize] = val / 100;
+                            self.memory[self.i as usize + 1] = (val / 10) % 10;
+                            self.memory[self.i as usize + 2] = val % 10;
+                    },
+                    0x55 => {
+                        let reg_i = self.i;
+                        for i in 0..=x {
+                            self.memory[reg_i as usize + i] = self.v[i]
+                        } 
+                    },
+                    0x65 => {
+                        let reg_i = self.i;
+                        for i in 0..=x {
+                            self.v[i] = self.memory[reg_i as usize + i]
+                        } 
+                    }
                     _ => return Err(Ch8Errs::UnknownOpcode(opcode))
                 }
             },
@@ -214,14 +240,38 @@ impl Chip8 {
         Ok(())
     }
 
-    pub fn is_waiting_key(&self) {
+    pub fn handle_waiting_key(&mut self) {
         if let Some(reg) = self.waiting_for_key {
-            // if let Some(key) = get_pressed_key() {
-            //     self.v[reg as usize] = key;
-            //     self.waiting_for_key = None;
-            //     self.pc += 2;
-            // }
+            if let Some(key) = self.get_pressed_ch8_key() {
+                self.v[reg as usize] = key;
+                self.waiting_for_key = None;
+                self.pc += 2;
+            }
         }
+    }
+
+    fn get_pressed_ch8_key(&self) -> Option<u8> {
+        if is_key_pressed(KeyCode::Key1) { return Some(0x1); }
+        if is_key_pressed(KeyCode::Key2) { return Some(0x2); }
+        if is_key_pressed(KeyCode::Key3) { return Some(0x3); }
+        if is_key_pressed(KeyCode::Key4) { return Some(0xC); }
+        
+        if is_key_pressed(KeyCode::Q) { return Some(0x4); }
+        if is_key_pressed(KeyCode::W) { return Some(0x5); }
+        if is_key_pressed(KeyCode::E) { return Some(0x6); }
+        if is_key_pressed(KeyCode::R) { return Some(0xD); }
+        
+        if is_key_pressed(KeyCode::A) { return Some(0x7); }
+        if is_key_pressed(KeyCode::S) { return Some(0x8); }
+        if is_key_pressed(KeyCode::D) { return Some(0x9); }
+        if is_key_pressed(KeyCode::F) { return Some(0xE); }
+        
+        if is_key_pressed(KeyCode::Z) { return Some(0xA); }
+        if is_key_pressed(KeyCode::X) { return Some(0x0); }
+        if is_key_pressed(KeyCode::C) { return Some(0xB); }
+        if is_key_pressed(KeyCode::V) { return Some(0xF); }
+        
+        None
     }
 
     pub fn update_keypad_state(&mut self) {
