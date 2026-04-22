@@ -1,3 +1,5 @@
+use std::io::{self, Write};
+
 pub struct Chip8 {
     memory: [u8; 4096],
     v: [u8; 16],
@@ -67,6 +69,22 @@ impl Chip8 {
         let mask = (1 << (end - start + 1)) - 1;
         (value >> start) & mask
     }
+
+    pub fn print_regs(&self) {
+        print!("\r");
+        for v in &self.v {
+            print!("{v:<3} ");
+        }
+        io::stdout().flush().unwrap();
+    }
+
+    pub fn print_heads(&self) {
+        for (i, _) in self.v.iter().enumerate() {
+            print!("v{i:X}  ");
+        }
+        println!()
+    }
+
 
     pub fn cycle(&mut self) {
         let opcode = ((self.memory[self.pc as usize] as u16) << 8) | (self.memory[(self.pc + 1) as usize] as u16);
