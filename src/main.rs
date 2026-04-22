@@ -30,6 +30,7 @@ async fn main() {
                 if show_regs {
                     chip8.print_regs();
                 }
+                chip8.update_screen();
                 next_frame().await;
             }
         },
