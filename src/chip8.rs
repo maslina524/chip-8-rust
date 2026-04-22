@@ -1,5 +1,9 @@
 use std::io::{self, Write};
 
+pub enum Ch8Errs {
+    UnknownOpcode(u16)
+}
+
 pub struct Chip8 {
     memory: [u8; 4096],
     v: [u8; 16],
@@ -86,7 +90,7 @@ impl Chip8 {
     }
 
 
-    pub fn cycle(&mut self) {
+    pub fn cycle(&mut self) -> Result<(), Ch8Errs> {
         let opcode = ((self.memory[self.pc as usize] as u16) << 8) | (self.memory[(self.pc + 1) as usize] as u16);
         self.pc += 2;
 
@@ -96,7 +100,16 @@ impl Chip8 {
         let nn = (opcode & 0xFF) as u8;
         let nnn = opcode & 0x0FFF;
         match opcode >> 12 {
-            0x0 => {},
+            0x0 => {
+                match opcode {
+                    0x00E0 => self.screen = [[false; 64]; 32],
+                    0x00EE => {
+                        self.sp -= 1;
+                        self.pc = self.stack[self.sp as usize]
+                    }
+                    _ => return Err(Ch8Errs::UnknownOpcode(opcode))
+                }
+            },
             0x1 => {
                 self.pc = nnn
             },
@@ -119,5 +132,7 @@ impl Chip8 {
 
             _ => unreachable!()
         }
+
+        Ok(())
     }
 }
