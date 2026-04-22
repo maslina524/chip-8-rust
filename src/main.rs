@@ -1,0 +1,21 @@
+use std::{env, fs};
+
+fn main() {
+    let argv: Vec<String> = env::args().collect();
+    let ch8_file = argv.get(1);
+
+    if ch8_file.is_none() {
+        eprintln!("Usage: {} <chip-8 rom path>", &argv[0]);
+        return;
+    }
+
+    let result = fs::read(ch8_file.unwrap());
+    match result {
+        Ok(rom) => run(rom),
+        Err(e) => eprintln!("Failed to read file: {e}")
+    }
+}
+
+fn run(rom: Vec<u8>) {
+    println!("{:?}", rom)
+}
