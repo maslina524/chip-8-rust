@@ -25,6 +25,7 @@ async fn main() {
             }
             loop {
                 chip8.update_keypad_state();
+                chip8.handle_waiting_key();
                 chip8.cycle();
                 if show_regs {
                     chip8.print_regs();
